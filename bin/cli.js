@@ -6,15 +6,18 @@ import chalk from 'chalk'
 const program = new Command();
 
 program 
+    .name('Project-Setup')
     .version('1.0.0')
-    .description('My CLI Tool')
+    .description('CLI tool for setting up new projects')
 
 program 
-    .command('greet <name>')
-    .description('Greet a person by name')
-    .action((name) =>{console.log(chalk.green(`Hello, ${name}!`))}
-    )
+    .command('init')
+    .description('Initialize a new project')
+    //.action(()=> setupProject()
+    //)
     
+
+
 program.parse(process.argv)
 
 
