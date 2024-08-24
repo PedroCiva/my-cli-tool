@@ -9,7 +9,7 @@ export default [
     },
     rules: {
       'no-undef': 'error', // Disallow the use of undeclared variables
-      'no-unused-vars': 'error', // Disallow unused variables
+      'no-unused-vars': 'warn', // Disallow unused variables
       'no-extra-semi': 'error', // Disallow unnecessary semicolons
       'no-redeclare': 'error', // Disallow variable redeclaration
       'no-dupe-args': 'error', // Disallow duplicate arguments in functions

@@ -2,6 +2,7 @@
 
 import { Command } from 'commander';
 import chalk from 'chalk'
+import { setupProject } from '../src/commands/setupProject.js';
 
 const program = new Command();
 
@@ -13,8 +14,8 @@ program
 program 
     .command('init')
     .description('Initialize a new project')
-    //.action(()=> setupProject()
-    //)
+    .action(()=> setupProject()
+    )
     
 
 
