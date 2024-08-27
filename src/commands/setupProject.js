@@ -2,7 +2,8 @@ import inquirer from "inquirer";
 import fs from "fs";
 import path from "path";
 import chalk from "chalk";
-import { execSync } from "child_process";
+import { exec, execSync } from "child_process";
+import { cwd } from "process";
 
 
 // Define tools for Node.js
@@ -111,14 +112,24 @@ const createProjectStructure = (answers) => {
   }
 };
 
-
+//TODO: Setup gitignore for all dependencies and tools? Run this method in the last place?
 const initializeGit = (projectName) => {
-    execSync
+  const projectPath = path.join(process.cwd(), projectName)
+
+  //Create git repository and perform first commit
+  execSync('git init', {cwd: projectPath, stdio: 'inherit'})
+  execSync('git add .', {cwd: projectPath, stdio: 'inherit'})
+  execSync('git commit -m "Initial Commit"', {cwd: projectPath, stdio: 'inherit'})
+  console.log(chalk.green('Git repository initialized.'))
 };
 
-const installDependencies = (projectType) => {};
+const installDependencies = (projectType) => {
 
-const configureTools = (tools, projectType) => {};
+};
+
+const configureTools = (tools, projectType) => {
+
+};
 
 
     
