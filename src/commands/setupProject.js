@@ -6,11 +6,27 @@ import { exec, execSync } from "child_process";
 import { cwd } from "process";
 
 
-// Define tools for Node.js
-const nodeTools = ["ESLint", "Prettier", "TypeScript", "Jest", "Mocha", "Webpack", "Nodemon"];
+// Define tools for Node.js using key values pairs (tool name: install command)
+//Using --prefix . to force npm to install the packages on the desired path (since in our case (dev) we already have node_modules folder set up on a parent directory)
+//TODO: Remove --prefix . for production version?
+const nodeTools = {
+  "ESLint": "npm install eslint --prefix .",
+  "Prettier": "npm install prettier --save-dev",
+  "TypeScript": "npm install typescript --save-dev",
+  "Jest": "npm install jest --save-dev",
+  "Mocha": "npm install mocha --save-dev",
+  "Webpack": "npm install webpack --save-dev",
+  "Nodemon": "npm install nodemon --save-dev"
+};
 
-// Define tools for Python
-const pythonTools = ["Flake8", "Black", "Pylint", "Mypy", "Pytest", "isort", "Virtualenv"];
+// Define tools for Python using key values pairs (tool name: install command)
+const pythonTools = {
+  "Black": "pip install black",
+  "Pylint": "pip install pylint",
+  "Mypy": "pip install mypy",
+  "Pytest": "pip install pytest",
+  "isort": "pip install isort",
+};
 
 const questions = [
   {
@@ -36,21 +52,20 @@ const questions = [
     message: "Do you want to initialize a Git repository?",
   },
   {
-    //TODO: Change the options available based on the user project type choice
-    type: "checkbox", //assigns an array fille with the choices that were chosen
+    type: "checkbox", //assigns an array filled with the choices selected by the user
     name: "tools",
     message: "Which tools would you like to configure",
     choices: (answers) =>{
-        return answers.projectType === 'Node.js' ? nodeTools : pythonTools
+        return answers.projectType === 'Node.js' ? Object.keys(nodeTools) : Object.keys(pythonTools)
     } 
   },
-  { 
+  /*{ 
     type: "confirm", //assigns a boolean type
     name: "installDependencies",
     message: (answers) =>
       `Should I install common dependecies for ${answers.projectType}?`,
     default: true,
-  },
+  },*/
 ];
 
 export const setupProject = async () => {
@@ -80,8 +95,8 @@ export const setupProject = async () => {
     if (answers.gitInit) {
       initializeGit(answers.projectName);
     }
-    if (answers.installDependencies) {
-      installDependencies(answers.projectType);
+    if (answers.tools.length > 0) {  //Check if any tools were selected
+      installDependencies(answers.projectName, answers.projectType, answers.tools);
     }
     configureTools(answers.tools, answers.projectType);
 };
@@ -112,7 +127,7 @@ const createProjectStructure = (answers) => {
   }
 };
 
-//TODO: Setup gitignore for all dependencies and tools? Run this method in the last place?
+//TODO: Run this method in the last place?
 const initializeGit = (projectName) => {
   const projectPath = path.join(process.cwd(), projectName)
 
@@ -123,7 +138,29 @@ const initializeGit = (projectName) => {
   console.log(chalk.green('Git repository initialized.'))
 };
 
-const installDependencies = (projectType) => {
+//No need to check for project type since this is already being checked via the inquirer
+const installDependencies = (projectName, projectType,tools) => {
+  let dependencies = tools
+  const projectPath = path.join(process.cwd(), projectName)
+
+  //TODO: Must check if NPM is already installed
+  //TODO: Remove projectType check
+  //Use NPM
+  if(projectType === 'Node.js')
+  {
+    dependencies.forEach(dependency => {
+      console.log(projectPath)
+      execSync(nodeTools[dependency], {cwd: projectPath, stdio: 'inherit'})
+      console.log(chalk.green(`${dependency} has been installed`))
+    });
+  }
+  //TODO: Must check if PIP is already installed
+  //Use PIP
+  else if (projectType === 'Python'){ 
+
+  }
+
+  console.log(chalk.greenBright(`Finished installing dependencies`))
 
 };
 
