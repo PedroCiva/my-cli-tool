@@ -7,16 +7,16 @@ import { cwd } from "process";
 
 // Define tools for Node.js using key values pairs (tool name: install command)
 //Using --prefix . will force npm to install the packages on the desired path (since in our case (dev) we already have node_modules folder set up on a parent directory)
-const usePrefix = usePrefix? '--prefix .' : ''
+const usePrefix = process.env.USE_PREFIX ? '--prefix . ' : ''
 
 const nodeTools = {
-  ESLint: `npm install eslint ${usePrefix} --save-dev` ,
-  Prettier: `npm install prettier ${usePrefix} --save-dev`,
-  TypeScript: `npm install typescript ${usePrefix} --save-dev`,
-  Jest: `npm install jest ${usePrefix} --save-dev`,
-  Mocha: `npm install mocha ${usePrefix} --save-dev`,
-  Webpack: `npm install webpack ${usePrefix} --save-dev`,
-  Nodemon: `npm install nodemon ${usePrefix} --save-dev`,
+  ESLint: `npm install eslint ${usePrefix}--save-dev` ,
+  Prettier: `npm install prettier ${usePrefix}--save-dev`,
+  TypeScript: `npm install typescript ${usePrefix}--save-dev`,
+  Jest: `npm install jest ${usePrefix}--save-dev`,
+  Mocha: `npm install mocha ${usePrefix}--save-dev`,
+  Webpack: `npm install webpack ${usePrefix}--save-dev`,
+  Nodemon: `npm install nodemon ${usePrefix}--save-dev`,
 };
 
 // Define tools for Python using key values pairs (tool name: install command)
