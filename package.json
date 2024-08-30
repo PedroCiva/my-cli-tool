@@ -5,7 +5,9 @@
   "main": "bin/cli.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cross-env NODE_ENV=production node bin/cli.js init",
+    "dev": " cross-env NODE_ENV=development node bin/cli.js init"
   },
   "bin": {
     "my-cli-tool": "./bin/cli.js"
@@ -17,11 +19,13 @@
     "axios": "^1.7.5",
     "chalk": "^5.3.0",
     "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
     "fs-extra": "^11.2.0",
     "inquirer": "^10.1.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
+    "cross-env": "^7.0.3",
     "eslint": "^9.9.1",
     "globals": "^15.9.0",
     "nodemon": "^3.1.4",

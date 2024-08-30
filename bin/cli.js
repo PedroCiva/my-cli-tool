@@ -1,8 +1,12 @@
 #!/usr/bin/env node
 
+//Load environment variables
+import './loadEnv.js';
+
+//Other imports
 import { Command } from 'commander';
-import chalk from 'chalk'
 import { setupProject } from '../src/commands/setupProject.js';
+
 
 const program = new Command();
 
