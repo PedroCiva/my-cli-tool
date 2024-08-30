@@ -55,7 +55,7 @@ const questions = [
   },
   {
     type: "confirm", //assigns a boolean type
-    name: "gitInit",
+    name: "setupGit",
     message: "Do you want to initialize a Git repository?",
   },
   {
@@ -102,17 +102,21 @@ export const setupProject = async () => {
   //continue project setup based on the anwsers
   createProjectStructure(answers);
 
-  if (answers.gitInit) {
+  if (answers.setupGit) {
     initializeGit(answers.projectName);
   }
-  if (answers.installDependencies) {
-    installDependencies(
+
+  if (answers.tools.length > 0) {
+    installTools(
       answers.projectName,
       answers.projectType,
       answers.tools
     );
   }
-  configureTools(answers.tools, answers.projectType);
+  if(answers.configureTools){
+    configureTools(answers.tools, answers.projectType);
+  }
+  
 };
 
 const createProjectStructure = (answers) => {
@@ -159,7 +163,7 @@ const initializeGit = (projectName) => {
 };
 
 //No need to check for project type since this is already being checked via the inquirer
-const installDependencies = (projectName, projectType, tools) => {
+const installTools = (projectName, projectType, tools) => {
   let dependencies = tools;
   const projectPath = path.join(process.cwd(), projectName);
 
