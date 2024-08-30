@@ -4,16 +4,18 @@ import path from "path";
 import chalk from "chalk";
 import { exec, execSync } from "child_process";
 import { cwd } from "process";
+import { ESLint } from "eslint";
 
-// Define tools for Node.js using key values pairs (tool name: install command)
 //Using --prefix . will force npm to install the packages on the desired path (since in our case (dev) we already have node_modules folder set up on a parent directory)
 const usePrefix = process.env.USE_PREFIX ? '--prefix . ' : ''
 
+const projectTypes = ["Node.js", "Python"]
+
+// Define tools for Node.js using key values pairs (tool name: install command)
 const nodeTools = {
-  ESLint: `npm install eslint ${usePrefix}--save-dev` ,
+  ESLint: `npm install eslint @eslint/js ${usePrefix}--save-dev` ,
   Prettier: `npm install prettier ${usePrefix}--save-dev`,
   TypeScript: `npm install typescript ${usePrefix}--save-dev`,
-  Jest: `npm install jest ${usePrefix}--save-dev`,
   Mocha: `npm install mocha ${usePrefix}--save-dev`,
   Webpack: `npm install webpack ${usePrefix}--save-dev`,
   Nodemon: `npm install nodemon ${usePrefix}--save-dev`,
@@ -27,6 +29,11 @@ const pythonTools = {
   Pytest: "pip install pytest",
   isort: "pip install isort",
 };
+
+//Define basic configuration files for the tools
+const nodeToolsConfig = {
+  
+}
 
 const questions = [
   {
@@ -44,7 +51,7 @@ const questions = [
     type: "list", //choose from a list, assigns a single string based on the choices
     name: "projectType",
     message: "What type of project are you creating?",
-    choices: ["Node.js", "Python", "Other"],
+    choices: projectTypes,
   },
   {
     type: "confirm", //assigns a boolean type
@@ -54,20 +61,21 @@ const questions = [
   {
     type: "checkbox", //assigns an array filled with the choices selected by the user
     name: "tools",
-    message: "Which tools would you like to configure",
+    message: "Which tools would you like to install",
     choices: (answers) => {
       return answers.projectType === "Node.js"
         ? Object.keys(nodeTools)
         : Object.keys(pythonTools);
     },
   },
-  /*{ 
+  { 
     type: "confirm", //assigns a boolean type
-    name: "installDependencies",
+    name: "configureTools",
     message: (answers) =>
-      `Should I install common dependecies for ${answers.projectType}?`,
+      `Should I set up the basic config files for the selected tools (where applicable): ${answers.tools}`,
     default: true,
-  },*/
+    when: (answers) => answers.tools.length > 0,
+  },
 ];
 
 export const setupProject = async () => {
@@ -97,8 +105,7 @@ export const setupProject = async () => {
   if (answers.gitInit) {
     initializeGit(answers.projectName);
   }
-  if (answers.tools.length > 0) {
-    //Check if any tools were selected
+  if (answers.installDependencies) {
     installDependencies(
       answers.projectName,
       answers.projectType,
@@ -111,7 +118,7 @@ export const setupProject = async () => {
 const createProjectStructure = (answers) => {
   //The root folder will be whatever the root directory of this application is ( process.cwd() )
   const projectPath = path.join(process.cwd(), answers.projectName);
-  console.log(projectPath);
+  console.log("Project path" + projectPath);
 
   if (!fs.existsSync(projectPath)) {
     //Make main directory
@@ -164,6 +171,8 @@ const installDependencies = (projectName, projectType, tools) => {
   //Use PIP
   else if (projectType === "Python") {
   }
+
+  //Install dependencies
   dependencies.forEach((dependency) => {
     console.log(projectPath);
     execSync(nodeTools[dependency], { cwd: projectPath, stdio: "inherit" });
